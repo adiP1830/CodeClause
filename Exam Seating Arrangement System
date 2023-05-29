@@ -1,1 +1,148 @@
+package org.example;
+import java.util.*;
+
+class Student {
+    private String name;
+    private int rollNumber;
+    private String branch;
+    private int semester;
+    private int year;
+
+    public Student(String name, int rollNumber, String branch, int semester, int year) {
+        this.name = name;
+        this.rollNumber = rollNumber;
+        this.branch = branch;
+        this.semester = semester;
+        this.year = year;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getRollNumber() {
+        return rollNumber;
+    }
+
+    public String getBranch() {
+        return branch;
+    }
+
+    public int getSemester() {
+        return semester;
+    }
+
+    public int getYear() {
+        return year;
+    }
+}
+
+class SeatingArrangement {
+    private Map<Integer, List < Student >> seatingMap;
+
+    public SeatingArrangement() {
+        seatingMap = new HashMap<>();
+    }
+
+    public void addStudentToSeating(int row, Student student) {
+        if (!seatingMap.containsKey(row)) {
+            seatingMap.put(row, new ArrayList<>());
+        }
+        seatingMap.get(row).add(student);
+    }
+
+    public void generateSeatingArrangement() {
+        List<Integer> rows = new ArrayList<>(seatingMap.keySet());
+        Collections.sort(rows);
+
+        for (int row : rows) {
+            System.out.println("Row " + row );
+            List<Student> students = seatingMap.get(row);
+            Collections.sort(students, Comparator.comparingInt(Student::getRollNumber));
+            for (Student student : students) {
+                System.out.println("Name: " + student.getName() + "    " + "Roll Number: " + student.getRollNumber());
+            }
+            System.out.println();
+        }
+    }
+}
+
+class Main {
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        SeatingArrangement seatingArrangement = new SeatingArrangement();
+
+        System.out.println();
+        System.out.println("                   ┕┓ ┕┓ ✎  Exam Seating Arrangement System ✎ ┎┚ ┎┚                     ");
+        // Admin login
+        System.out.println("*** Admin Login ***");
+        System.out.print("Username: ");
+        String adminUsername = scanner.nextLine();
+        System.out.print("Password: ");
+        String adminPassword = scanner.nextLine();
+
+        // Admin approval
+        boolean isAdminApproved = adminApproval(adminUsername, adminPassword);
+        if (!isAdminApproved) {
+            System.out.println("Admin approval failed. Exiting...");
+            return;
+        }
+
+        System.out.println();
+        System.out.println("*** Students Login *** ");
+        // Input details
+        System.out.print("Enter the total number of students: ");
+        int totalStudents = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline character
+
+        System.out.print("Enter the number of available classes: ");
+        int totalClasses = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline character
+
+        System.out.print("Enter the number of seats per class: ");
+        int seatsPerClass = scanner.nextInt();
+
+        for (int i = 0; i < totalStudents; i++) {
+
+            System.out.println();
+            System.out.println("✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯");
+            System.out.println("Student " + (i + 1) + " details");
+            System.out.print("Name: ");
+            String name = scanner.nextLine();
+            scanner.nextLine();  // Consume the newline character
+
+            System.out.print("Roll Number: ");
+            int rollNumber = scanner.nextInt();
+            scanner.nextLine(); // Consume the newline character
+
+            System.out.print("Branch: ");
+            String branch = scanner.nextLine();
+
+            System.out.print("Semester: ");
+            int semester = scanner.nextInt();
+            scanner.nextLine(); // Consume the newline character
+
+            System.out.print("Year: ");
+            int year = scanner.nextInt();
+            scanner.nextLine(); // Consume the newline character
+
+            Student student = new Student(name, rollNumber, branch, semester, year);
+            seatingArrangement.addStudentToSeating((rollNumber % totalClasses) + 1, student);
+        }
+
+        System.out.println();
+        // Generate seating arrangement
+        System.out.println("✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯✯");
+        System.out.println();
+        System.out.println("••••••✯✯✯ Seating Arrangement ✯✯✯••••••");
+        seatingArrangement.generateSeatingArrangement();
+    }
+
+    private static boolean adminApproval(String username, String password) {
+        // Implement your admin approval logic here
+        // For simplicity, let's assume any username/password combination is approved
+        return true;
+    }
+}
 
